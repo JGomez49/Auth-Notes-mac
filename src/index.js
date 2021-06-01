@@ -1,3 +1,9 @@
+//Para subir el projecto a GitHub:
+    //git remote add origin https://github.com/JGomez49/Auth-Notes-mac.git
+    //git add .
+    //git commit -m "working on ...."
+    //git push -u origin main
+
 
 //Este proyecto es basado en FAZT (https://www.youtube.com/watch?v=Hjp0nTY2dBk)
 //Nodejs & Mongodb CRUD
