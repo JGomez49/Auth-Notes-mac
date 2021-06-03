@@ -4,6 +4,8 @@
 //https://www.youtube.com/watch?v=8sXcFXFOWK4
 //https://www.youtube.com/watch?v=htlt7L8Yl1k
 //https://www.youtube.com/watch?v=dFb1r4rUYMQ
+//https://www.youtube.com/watch?v=PQL_iwLKnRg
+
 
 const notesCrtl = {};
 const Note = require('../models/Note');
@@ -34,12 +36,19 @@ notesCrtl.renderNotes = async (req,res)=>{
     res.render('notes/all-notes', {notes});
 };
 
-notesCrtl.renderEditForm = (req,res)=>{
-    res.send('Edit note...');
+notesCrtl.renderEditForm = async(req,res)=>{
+    // res.send('Edit note...');
+    const note = await Note.findById(req.params.id);
+    console.log(note);
+    res.render('notes/edit-note', {note:note});
 }
 
-notesCrtl.updateNote = (req,res)=>{
-    res.send('Update note...');
+notesCrtl.updateNote = async (req,res)=>{
+    // res.send('Update note...');
+    // console.log(req.body);
+    const {title, description} = req.body;
+    await Note.findByIdAndUpdate(req.params.id, {title, description});
+    res.redirect('/notes');
 }
 
 notesCrtl.deleteNote = async (req,res)=>{
