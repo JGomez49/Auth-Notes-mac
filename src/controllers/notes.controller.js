@@ -5,6 +5,7 @@
 //https://www.youtube.com/watch?v=htlt7L8Yl1k
 //https://www.youtube.com/watch?v=dFb1r4rUYMQ
 //https://www.youtube.com/watch?v=PQL_iwLKnRg
+//// connect-flash: https://www.youtube.com/watch?v=YR5AmzlO-Ww
 
 
 const notesCrtl = {};
@@ -26,6 +27,7 @@ notesCrtl.createNewNote = async(req,res)=>{
         description: description
     });
     await newNote.save();
+    req.flash('success_msg','Note added successfully');
     console.log(newNote);
     res.redirect('/notes');
 }
@@ -48,6 +50,7 @@ notesCrtl.updateNote = async (req,res)=>{
     // console.log(req.body);
     const {title, description} = req.body;
     await Note.findByIdAndUpdate(req.params.id, {title, description});
+    req.flash('success_msg','Note updated successfully');
     res.redirect('/notes');
 }
 
@@ -55,6 +58,7 @@ notesCrtl.deleteNote = async (req,res)=>{
     // res.send('Delete a note');
     // console.log(req.params.id);
     await Note.findByIdAndDelete(req.params.id);
+    req.flash('success_msg','Note deleted successfully');
     res.redirect('/notes');
 }
 module.exports = notesCrtl;

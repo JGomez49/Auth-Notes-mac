@@ -1,4 +1,8 @@
 //method-override: https://www.youtube.com/watch?v=dFb1r4rUYMQ
+// 14. Mensajes con connect-flash: https://www.youtube.com/watch?v=YR5AmzlO-Ww
+// 15. Vistas de Login y Registro de Usuarios: https://www.youtube.com/watch?v=l4K12TBbwKg
+// 16. Registro de Usuario o SignUp: https://www.youtube.com/watch?v=EpomajNVcMk
+// 17. Login de Usuarios con Passport y bcrypt: https://www.youtube.com/watch?v=NN-Jt6EjFAc
 
 
 const express = require('express');
@@ -8,10 +12,13 @@ const path = require('path');
 const morgan = require('morgan');
 const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access')
 const methodOverride = require('method-override');
-
+const flash = require('connect-flash');
+const session = require('express-session');
+const passport = require('passport');
 
 // Initializations:
 const app = express();
+require('./config/passport');
 
 // Settings:
 app.set('port', process.env.PORT || 3000);
@@ -29,13 +36,27 @@ app.set('view engine', '.hbs');
 app.use(morgan('dev'));
 app.use(express.urlencoded({extended: false}));
 app.use(methodOverride('_method'));
+app.use(session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
 
 // Global Variables:
-app.use(require('./routes/index.routes'));
-app.use(require('./routes/notes.routes'));
+app.use((req,res,next)=>{
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error');
+    next();
+});
 
 // Routes:
-
+app.use(require('./routes/index.routes'));
+app.use(require('./routes/notes.routes'));
+app.use(require('./routes/users.routes'));
 
 // Static Files:
 app.set(express.static(path.join(__dirname, 'public')));
