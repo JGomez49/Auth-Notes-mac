@@ -2,32 +2,31 @@
 
 const passport = require('passport');
 
-const LocalStrategy = require('passport-local');
+const LocalStrategy = require('passport-local').Strategy;
 
 const User = require('../models/User');
 
-// passport.use('login', new LocalStrategy({ <- esto tambien se podria.
-passport.use('login', new LocalStrategy({
+passport.use(new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password'
 }, async (email, password, done)=>{
     //match email
     const user = await User.findOne({email});
     if(!user){
-        return done(null, false, {message: 'Not user found'})
+        return done(null, false, {message: 'Not user found'});
     }else{
-        //Match password
+        //match password (encrypt y match estan definidos en el modelo user.js)
         const match = await user.matchPassword(password);
         if (match) {
             return done(null, user);
         }else{
             return done(null, false, {message: 'Incorrect password!'});
         }
-    }
-        
+    }   
 }));
 
-//done es el callback
+
+////done es el callback
 passport.serializeUser((user, done)=>{
     done(null, user.id);
 });
